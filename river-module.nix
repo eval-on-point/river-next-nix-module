@@ -231,12 +231,12 @@ in
 
                 exec /run/current-system/sw/bin/${windowManager}
               '';
-              launcher = pkgs.writeShellScript "river-${windowManager}-launcher" '' # CURRENTLY REKA SESSION IS BUGGED, LAUNCH VIA TTY.
+              launcher = pkgs.writeShellScript "river-${windowManager}-launcher" ''
                 ${if windowManager == "reka" then ''
                   exec dbus-run-session -- /run/current-system/sw/bin/river -c \
-                    '${pkgs.emacs}/bin/emacs \
+                    "${pkgs.emacs}/bin/emacs \
                       --directory ${localPkgs.reka.reka-lib}/share/emacs/site-lisp \
-                      --directory ${localPkgs.reka}/share/emacs/site-lisp'
+                      --directory ${localPkgs.reka}/share/emacs/site-lisp"
                 '' else ''
                   exec dbus-run-session -- /run/current-system/sw/bin/river -c ${initScript}
                 ''}
