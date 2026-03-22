@@ -1,4 +1,5 @@
 {
+  lib,
   python3Packages,
   fetchFromGitHub,
   wayland,
@@ -47,4 +48,18 @@ python3Packages.buildPythonPackage (finalAttrs: {
   '';
 
   doCheck = false;
+
+  meta = {
+    homepage = "https://github.com/pinpox/river-pwm";
+    description = "Tiling window manager for the River Wayland compositor, written in Python";
+    longDescription = ''
+      pwm is a tiling window manager for the River Wayland compositor, written in Python.
+      Its features include multiple layout presets and workspaces (nine per output).
+    '';
+    license = lib.licenses.isc;
+    maintainers = with lib.maintainers; [
+      dmkhitaryan
+    ];
+    platforms = lib.platforms.linux;
+  };
 })

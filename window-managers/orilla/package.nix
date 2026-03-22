@@ -41,4 +41,19 @@ rustPlatform.buildRustPackage {
     install -Dm755 ${defaultConfig} $out/example/default.toml
   '';
 
+  meta = {
+    homepage = "https://git.sr.ht/~hokiegeek/orilla";
+    description = "Rust-based window manager for the Wayland compositor, river";
+    longDescription = ''
+      orilla is a Rust-based window manager for the river Wayland compositor.
+      Inspired by XMonad, it exists for a simple reason: layout is ergonomics. How your tools are arranged affects how well you can use them.
+      (too much) more: https://man.sr.ht/~hokiegeek/orilla/#philosophy
+    '';
+    license = lib.licenses.gpl3Only;
+    maintainers = with lib.maintainers; [
+      dmkhitaryan
+    ];
+    platforms = lib.platforms.linux;
+  };
+
 }

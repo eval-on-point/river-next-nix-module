@@ -52,4 +52,14 @@ emacsPackages.trivialBuild {
   packageRequires = [ reka ];
 
   passthru.reka-lib = reka;
+
+  meta = {
+    homepage = "https://code.tvl.fyi/about/tools/emacs-pkgs/reka";
+    description = "Emacs-based window manager for river";
+    license = lib.licenses.gpl3Only;
+    maintainers = with lib.maintainers; [
+      dmkhitaryan
+    ];
+    platforms = lib.platforms.linux;
+  };
 }

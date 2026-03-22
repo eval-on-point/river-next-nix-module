@@ -43,4 +43,14 @@ rustPlatform.buildRustPackage {
     install -Dm755 $src/example/rrwm.desktop $out/local/share/wayland-sessions
     install -Dm755 ${exampleConfig} $out/example
   '';
+
+  meta = {
+    homepage = "https://github.com/cap153/rrwm";
+    description = "Tiling window manager with a cosmic/bspwm layout";
+    license = lib.licenses.mit;
+    maintainers = with lib.maintainers; [
+      dmkhitaryan
+    ];
+    platforms = lib.platforms.linux;
+  };
 }

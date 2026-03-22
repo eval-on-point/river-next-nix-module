@@ -48,4 +48,18 @@ stdenv.mkDerivation (finalAttrs: {
     "${finalAttrs.deps}"
   ] ++ [ "-Doptimize=ReleaseSafe" ];
 
+  meta = {
+    homepage = "https://codeberg.org/lzj15/rill";
+    description = "Minimalist scrolling window manager";
+    longDescription = ''
+      Rill is a minimalist scrolling window manager for river, implementing the river-window-management-v1 protocol, written in Zig.
+      Rill supports animations and a live-reloadable configuration.
+    '';
+    license = lib.licenses.mit;
+    maintainers = with lib.maintainers; [
+      dmkhitaryan
+    ];
+    platforms = lib.platforms.linux;
+  };
+
 })

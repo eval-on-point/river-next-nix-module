@@ -34,4 +34,18 @@ rustPlatform.buildRustPackage {
     freetype
     fontconfig
   ];
+
+  meta = {
+    homepage = "https://github.com/roblillack/canoe";
+    description = "Stacking window manager for the River Wayland compositor";
+    longDescription = ''
+      Canoe is a stacking window manager for the River Wayland compositor, written in Rust.
+      Among its features are server-side decorations, multihead support, and window focus following clicks.
+    '';
+    license = lib.licenses.mit;
+    maintainers = with lib.maintainers; [
+      dmkhitaryan
+    ];
+    platforms = lib.platforms.linux;
+  };
 }

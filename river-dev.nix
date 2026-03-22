@@ -116,7 +116,6 @@ stdenv.mkDerivation (finalAttrs: {
 
   passthru = {
     providedSessions = [ "river" ];
-    updateScript = ./update.sh;
   };
 
   meta = {
@@ -129,10 +128,11 @@ stdenv.mkDerivation (finalAttrs: {
     '';
     changelog = "https://codeberg.org/river/river/releases/tag/v${finalAttrs.version}";
     license = lib.licenses.gpl3Only;
-    maintainers = with lib.maintainers; [
+    maintainers = with lib.maintainers; [ # Includes original maintainers when the file was used to generate the new version. Note: the release has now dropped on Nixpkgs.
       adamcstephens
       moni
       rodrgz
+      dmkhitaryan
     ];
     mainProgram = "river";
     platforms = lib.platforms.linux;

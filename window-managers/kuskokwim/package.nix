@@ -1,4 +1,5 @@
 {
+  lib,
   python3Packages,
   fetchFromCodeberg,
   wayland,
@@ -43,6 +44,22 @@ python3Packages.buildPythonPackage (finalAttrs: {
   postInstall = ''
     install -Dm755 $src/config.example.toml -t $out/example/config.toml
   '';
-
   doCheck = false;
+
+  meta = {
+    homepage = "https://codeberg.org/ricci/kuskokwim";
+    description = "Kuskokwim window manager for the River compositor (version > 0.4), written in Python";
+    longDescription = ''
+      Kuskokwim is a stacking window manager for the River Wayland compositor, written in Python.
+      Among its features are vim-inspired composable keybindings and trackable + restartable spawned processes.
+    '';
+    license = with lib.licenses; [
+      bsd2
+      isc
+    ];
+    maintainers = with lib.maintainers; [
+      dmkhitaryan
+    ];
+    platforms = lib.platforms.linux;
+  };
 })

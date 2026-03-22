@@ -6,7 +6,6 @@
   wayland-scanner,
   wayland-protocols,
   libxkbcommon,
-  gnumake,
   lib,
   git,
   fetchFromGitHub,
@@ -91,4 +90,14 @@ stdenv.mkDerivation (finalAttrs: {
         'init_file = malloc(sizeof(char) * (home_len + zrwm_init_text_len));' \
         'init_file = malloc(sizeof(char) * (home_len + zrwm_init_text_len + 1));'
   '';
+
+  meta = {
+    homepage = "https://git.sr.ht/~zuki/zrwm";
+    description = "dwl-inspired window manager for river";
+    license = lib.licenses.gpl3Only;
+    maintainers = with lib.maintainers; [
+      dmkhitaryan
+    ];
+    platforms = lib.platforms.linux;
+  };
 })

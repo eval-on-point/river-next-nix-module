@@ -42,4 +42,14 @@ stdenv.mkDerivation (finalAttrs: {
   installPhase = ''
     install -Dm755 tarazed $out/bin/tarazed
   '';
+
+  meta = {
+    homepage = "https://gitlab.gwdg.de/leonhenrik.plickat/tarazed";
+    description = "UNIX/NeXT UI-inspired window manager for the river Wayland server";
+    license = lib.licenses.gpl3Only;
+    maintainers = with lib.maintainers; [
+      dmkhitaryan
+    ];
+    platforms = lib.platforms.linux;
+  };
 })

@@ -48,4 +48,17 @@ stdenv.mkDerivation (finalAttrs: {
     "${finalAttrs.deps}"
   ] ++ [ "-Doptimize=ReleaseSafe" ];
 
+  meta = {
+    homepage = "https://codeberg.org/machi/machi";
+    description = "River-based window manager with cascading windows, horizontal panels and vertical workspaces";
+    longDescription = ''
+      Machi（町）is a minimalist window manager with cascading windows, horizontal panels and vertical workspaces.
+      It works on top of river's window management protocol.Offers single-view and split view modes.
+    '';
+    license = lib.licenses.isc;
+    maintainers = with lib.maintainers; [
+      dmkhitaryan
+    ];
+    platforms = lib.platforms.linux;
+  };
 })

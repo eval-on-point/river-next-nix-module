@@ -52,4 +52,25 @@ stdenv.mkDerivation (finalAttrs: {
     "${finalAttrs.deps}"
   ] ++ [ "-Doptimize=ReleaseSafe" ];
 
+  meta = {
+    homepage = "https://codeberg.org/beansprout/beansprout";
+    description = "DWM-style tiling window manager with built-in wallpaper and a clock/bar";
+    longDescription = ''
+      A tiling window manager DWM-style tiling window manager with built-in wallpaper and a clock/bar written in Zig. The window manager communicates using the river-window-management-v1 protocol, as well as some of River's additional Wayland protocols.
+      Beansprout uses a primary/stack tiling layout inspired by dwm with a customizable ratio and primary count.
+      Similarly, beansprout has a 32-bit tag system, rather than workspaces. Each output has its own tags and own primary count/ratio.
+    '';
+    license = with lib.licenses; [
+      bsd0
+      cc-by-40
+      cc0
+      gpl3Only
+      hpnd
+      mit
+    ];
+    maintainers = with lib.maintainers; [
+      dmkhitaryan
+    ];
+    platforms = lib.platforms.linux;
+  };
 })
