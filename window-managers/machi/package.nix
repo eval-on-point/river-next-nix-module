@@ -15,7 +15,7 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "machi";
-  version = "0.1.0-dev";
+  version = "unstable-2026-03-22";
 
   src = fetchFromCodeberg {
     owner = "machi";

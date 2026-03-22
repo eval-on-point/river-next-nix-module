@@ -14,7 +14,7 @@
 let
   reka = rustPlatform.buildRustPackage {
     pname = "reka-lib";
-    version = "unstable-2026-03-16";
+    version = "unstable-2026-03-22";
 
     src = fetchFromCodeberg {
       owner = "tazjin";

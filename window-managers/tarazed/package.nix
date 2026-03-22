@@ -15,7 +15,9 @@
 }:
 
 stdenv.mkDerivation (finalAttrs: {
-  name = "tarazed";
+  pname = "tarazed";
+  version = "unstable-2026-03-22";
+
   src = fetchFromGitLab {
     domain = "gitlab.gwdg.de";
     owner = "leonhenrik.plickat";

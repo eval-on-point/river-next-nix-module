@@ -15,7 +15,7 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "rhine";
-  version = "unstable-2026-03-16";
+  version = "unstable-2026-03-22";
 
   src = fetchFromCodeberg {
     owner = "Sivecano";

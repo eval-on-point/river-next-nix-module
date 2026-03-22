@@ -14,7 +14,7 @@ let
 in
 rustPlatform.buildRustPackage {
   pname = "orilla";
-  version = "unstable-2026-03-16";
+  version = "unstable-2026-03-22";
 
   src = fetchFromSourcehut {
     owner = "~hokiegeek";

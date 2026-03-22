@@ -18,7 +18,7 @@
 stdenv.mkDerivation (finalAttrs: {
   # Messy build altogether, be warned.
   pname = "rijan";
-  version = "unstable-2026-01-08";
+  version = "unstable-2026-03-22";
 
   src = fetchFromCodeberg {
     owner = "ifreund";

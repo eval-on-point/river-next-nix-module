@@ -21,7 +21,7 @@
 let
   meson_1_10 = meson.overrideAttrs (
     final: prev: {
-      version = "1.10.1";
+      version = "unstable-2026-03-22";
       format = "setuptools";
       src = fetchFromGitHub {
         owner = "mesonbuild";
