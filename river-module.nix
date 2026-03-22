@@ -7,11 +7,11 @@
 let
   cfg = config.programs.river-next;
   inherit (lib)
-  types
-  mkOption
-  mkIf
-  mkMerge
-  ;
+    types
+    mkOption
+    mkIf
+    mkMerge
+    ;
 
   localPkgs = {
     river-next = pkgs.callPackage ./river-dev.nix { };
@@ -42,23 +42,28 @@ in
       description = "Enable new River window manager.";
     };
 
-    package = mkOption {
-      type = types.nullOr types.package;
-      default = localPkgs.river-next;
-      description = ''
-        Sets the package to use for `river-next`. Can also be nulled.
-        Note that if the package of choice does not support `xwaylandSupport`
-        or `withManpages` ,then the module options {option}`xwayland` and
-        {option}`manpages` will have no effect.
-      '';
-    } // {
-      apply = p:
-      if p == null then null
-      else p.override {
-        xwaylandSupport = cfg.xwayland.enable;
-        withManpages = cfg.manpages.enable;
+    package =
+      mkOption {
+        type = types.nullOr types.package;
+        default = localPkgs.river-next;
+        description = ''
+          Sets the package to use for `river-next`. Can also be nulled.
+          Note that if the package of choice does not support `xwaylandSupport`
+          or `withManpages` ,then the module options {option}`xwayland` and
+          {option}`manpages` will have no effect.
+        '';
+      }
+      // {
+        apply =
+          p:
+          if p == null then
+            null
+          else
+            p.override {
+              xwaylandSupport = cfg.xwayland.enable;
+              withManpages = cfg.manpages.enable;
+            };
       };
-    };
 
     xwayland.enable = mkOption {
       type = types.bool;
@@ -73,30 +78,34 @@ in
     };
 
     windowManagers = mkOption {
-      type = types.unique { message = "Duplicate window manager entries are not allowed."; } (types.listOf(types.enum [
-        "beansprout"
-        "canoe"
-        "kuskokwim"
-        "kwm"
-        "machi"
-        "mousetrap"
-        "notion-river"
-        "orilla"
-        "pwm"
-        "reka"
-        "rhine"
-        "rijan"
-        "rill"
-        "rrwm"
-        "tarazed"
-        "zrwm"
-      ]));
-      default = [];
+      type = types.unique { message = "Duplicate window manager entries are not allowed."; } (
+        types.listOf (
+          types.enum [
+            "beansprout"
+            "canoe"
+            "kuskokwim"
+            "kwm"
+            "machi"
+            "mousetrap"
+            "notion-river"
+            "orilla"
+            "pwm"
+            "reka"
+            "rhine"
+            "rijan"
+            "rill"
+            "rrwm"
+            "tarazed"
+            "zrwm"
+          ]
+        )
+      );
+      default = [ ];
       description = "List of window managers to enable. Multiple can be enabled at once.";
     };
 
     extraPackages = mkOption {
-      type = types.listOf(types.package);
+      type = types.listOf (types.package);
       default = with pkgs; [
         fuzzel
         foot
@@ -136,127 +145,134 @@ in
     };
   };
 
-  config = mkIf cfg.enable (
-    mkMerge [
-      {
-        environment.systemPackages =
-          lib.optional (cfg.package != null) cfg.package
-          ++ lib.optional cfg.kanshi.enable pkgs.kanshi
-          ++ cfg.extraPackages
-          ++ selectedWMs;
+  config = mkIf cfg.enable (mkMerge [
+    {
+      environment.systemPackages =
+        lib.optional (cfg.package != null) cfg.package
+        ++ lib.optional cfg.kanshi.enable pkgs.kanshi
+        ++ cfg.extraPackages
+        ++ selectedWMs;
 
-          xdg.portal = {
-            enable = true;
-            xdgOpenUsePortal = true;
-            wlr = {
-              enable = true;
-              settings = {
-                screencast = {
-                  chooser_type = "simple";
-                  chooser_cmd = "${pkgs.slurp}/bin/slurp -f %o";
-                };
-              };
+      xdg.portal = {
+        enable = true;
+        xdgOpenUsePortal = true;
+        wlr = {
+          enable = true;
+          settings = {
+            screencast = {
+              chooser_type = "simple";
+              chooser_cmd = "${pkgs.slurp}/bin/slurp -f %o";
             };
-            extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-            config.river.default = lib.mkDefault [
-              "gtk"
-              "wlr"
-            ];
-          };
-
-        security = {
-          polkit.enable = true;
-          pam.services.swaylock = { };
-        };
-
-        programs = {
-          dconf.enable = lib.mkDefault true;
-          xwayland.enable = cfg.xwayland.enable;
-        };
-
-        services.graphical-desktop.enable = true;
-        services.xserver.desktopManager.runXdgAutostartIfNone = lib.mkDefault true;
-
-        systemd.user.targets.river-session = {
-          description = "River compositor session";
-          requires = [ "graphical-session-pre.target" ];
-          bindsTo = [ "graphical-session-pre.target" ];
-        };
-
-        systemd.user.services.river-portal-fixer = {
-          description = "Restart portals once River session environment is ready";
-          bindsTo = [ "river-session.target" ];
-          wantedBy = [ "river-session.target" ];
-          after = [ "river-session.target" ];
-          serviceConfig = {
-            Type = "oneshot";
-            RemainAfterExit = true;
-            # Env vars are already imported by the init script before river-session.target
-            # starts, so we just need to restart the portals/wireplumber against the
-            # now-populated environment.
-            ExecStart = pkgs.writeShellScript "river-portal-restart" ''
-              ${pkgs.systemd}/bin/systemctl --user stop wireplumber xdg-desktop-portal xdg-desktop-portal-wlr
-              ${pkgs.systemd}/bin/systemctl --user start wireplumber xdg-desktop-portal xdg-desktop-portal-wlr
-              ${pkgs.systemd}/bin/systemctl --user import-environment PATH
-              ${pkgs.systemd}/bin/systemctl --user restart xdg-desktop-portal.service
-            '';
           };
         };
-        services.displayManager.sessionPackages =
-          lib.optional (cfg.package != null) cfg.package
-          ++ (map (windowManager:
-            let
-              initScript = pkgs.writeShellScript "river-${windowManager}-init" ''
-                export XDG_CURRENT_DESKTOP=river
+        extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+        config.river.default = lib.mkDefault [
+          "gtk"
+          "wlr"
+        ];
+      };
 
-                ${pkgs.systemd}/bin/systemctl --user import-environment \
-                  WAYLAND_DISPLAY \
-                  XDG_CURRENT_DESKTOP \
-                  XDG_RUNTIME_DIR \
-                  DISPLAY
-                ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd \
-                  WAYLAND_DISPLAY \
-                  XDG_CURRENT_DESKTOP \
-                  XDG_RUNTIME_DIR \
-                  DISPLAY
+      security = {
+        polkit.enable = true;
+        pam.services.swaylock = { };
+      };
 
-                ${pkgs.systemd}/bin/systemctl --user start river-session.target
+      programs = {
+        dconf.enable = lib.mkDefault true;
+        xwayland.enable = cfg.xwayland.enable;
+      };
 
-                ${lib.optionalString cfg.kanshi.enable ''
-                  ${let
-                    configFlag = lib.optionalString
-                      (cfg.kanshi.config != null)
-                      " -c ${pkgs.writeText "kanshi-config" cfg.kanshi.config}";
+      services.graphical-desktop.enable = true;
+      services.xserver.desktopManager.runXdgAutostartIfNone = lib.mkDefault true;
+
+      systemd.user.targets.river-session = {
+        description = "River compositor session";
+        requires = [ "graphical-session-pre.target" ];
+        bindsTo = [ "graphical-session-pre.target" ];
+      };
+
+      systemd.user.services.river-portal-fixer = {
+        description = "Restart portals once River session environment is ready";
+        bindsTo = [ "river-session.target" ];
+        wantedBy = [ "river-session.target" ];
+        after = [ "river-session.target" ];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          # Env vars are already imported by the init script before river-session.target
+          # starts, so we just need to restart the portals/wireplumber against the
+          # now-populated environment.
+          ExecStart = pkgs.writeShellScript "river-portal-restart" ''
+            ${pkgs.systemd}/bin/systemctl --user stop wireplumber xdg-desktop-portal xdg-desktop-portal-wlr
+            ${pkgs.systemd}/bin/systemctl --user start wireplumber xdg-desktop-portal xdg-desktop-portal-wlr
+            ${pkgs.systemd}/bin/systemctl --user import-environment PATH
+            ${pkgs.systemd}/bin/systemctl --user restart xdg-desktop-portal.service
+          '';
+        };
+      };
+      services.displayManager.sessionPackages =
+        lib.optional (cfg.package != null) cfg.package
+        ++ (map (
+          windowManager:
+          let
+            initScript = pkgs.writeShellScript "river-${windowManager}-init" ''
+              export XDG_CURRENT_DESKTOP=river
+
+              ${pkgs.systemd}/bin/systemctl --user import-environment \
+                WAYLAND_DISPLAY \
+                XDG_CURRENT_DESKTOP \
+                XDG_RUNTIME_DIR \
+                DISPLAY
+              ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd \
+                WAYLAND_DISPLAY \
+                XDG_CURRENT_DESKTOP \
+                XDG_RUNTIME_DIR \
+                DISPLAY
+
+              ${pkgs.systemd}/bin/systemctl --user start river-session.target
+
+              ${lib.optionalString cfg.kanshi.enable ''
+                ${
+                  let
+                    configFlag = lib.optionalString (
+                      cfg.kanshi.config != null
+                    ) " -c ${pkgs.writeText "kanshi-config" cfg.kanshi.config}";
                   in
-                    "${pkgs.kanshi}/bin/kanshi${configFlag}"} &
-                ''}
+                  "${pkgs.kanshi}/bin/kanshi${configFlag}"
+                } &
+              ''}
 
-                exec /run/current-system/sw/bin/${windowManager}
-              '';
-              launcher = pkgs.writeShellScript "river-${windowManager}-launcher" ''
-                ${if windowManager == "reka" then ''
-                  exec dbus-run-session -- /run/current-system/sw/bin/river -c \
-                    "${pkgs.emacs}/bin/emacs \
-                      --directory ${localPkgs.reka.reka-lib}/share/emacs/site-lisp \
-                      --directory ${localPkgs.reka}/share/emacs/site-lisp"
-                '' else ''
-                  exec dbus-run-session -- /run/current-system/sw/bin/river -c ${initScript}
-                ''}
-              '';
-            in
-            pkgs.writeTextFile {
-              name = "river-${windowManager}-session";
-              destination = "/share/wayland-sessions/river-${windowManager}.desktop";
-              text = ''
-                [Desktop Entry]
-                Name=River (${windowManager})
-                Type=Application
-                Comment=Launch River with ${windowManager} as window manager.
-                Exec=${launcher}
-              '';
-              passthru.providedSessions = [ "river-${windowManager}" ];
-            }) cfg.windowManagers);
-      }
-    ]
-  );
+              exec /run/current-system/sw/bin/${windowManager}
+            '';
+            launcher = pkgs.writeShellScript "river-${windowManager}-launcher" ''
+              ${
+                if windowManager == "reka" then
+                  ''
+                    exec dbus-run-session -- /run/current-system/sw/bin/river -c \
+                      "${pkgs.emacs}/bin/emacs \
+                        --directory ${localPkgs.reka.reka-lib}/share/emacs/site-lisp \
+                        --directory ${localPkgs.reka}/share/emacs/site-lisp"
+                  ''
+                else
+                  ''
+                    exec dbus-run-session -- /run/current-system/sw/bin/river -c ${initScript}
+                  ''
+              }
+            '';
+          in
+          pkgs.writeTextFile {
+            name = "river-${windowManager}-session";
+            destination = "/share/wayland-sessions/river-${windowManager}.desktop";
+            text = ''
+              [Desktop Entry]
+              Name=River (${windowManager})
+              Type=Application
+              Comment=Launch River with ${windowManager} as window manager.
+              Exec=${launcher}
+            '';
+            passthru.providedSessions = [ "river-${windowManager}" ];
+          }
+        ) cfg.windowManagers);
+    }
+  ]);
 }

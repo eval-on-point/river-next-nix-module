@@ -19,16 +19,18 @@
 }:
 
 let
-  meson_1_10 = meson.overrideAttrs (final: prev: {
-    version = "1.10.1";
-    format = "setuptools";
-    src = fetchFromGitHub {
-      owner = "mesonbuild";
-      repo = "meson";
-      rev = final.version;
-      hash = "sha256-UeSD3lIZ5hz3UsxZ1sCPzUhiekr3WIEiGxu+inyV8vo=";
-    };
-  });
+  meson_1_10 = meson.overrideAttrs (
+    final: prev: {
+      version = "1.10.1";
+      format = "setuptools";
+      src = fetchFromGitHub {
+        owner = "mesonbuild";
+        repo = "meson";
+        rev = final.version;
+        hash = "sha256-UeSD3lIZ5hz3UsxZ1sCPzUhiekr3WIEiGxu+inyV8vo=";
+      };
+    }
+  );
 in
 stdenv.mkDerivation (finalAttrs: {
   name = "mousetrap";

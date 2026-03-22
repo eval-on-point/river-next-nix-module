@@ -1,14 +1,14 @@
 {
-lib,
-stdenv,
-fetchFromCodeberg,
-zig_0_15,
-libxkbcommon,
-wayland,
-wayland-protocols,
-callPackage,
-pkg-config,
-wayland-scanner,
+  lib,
+  stdenv,
+  fetchFromCodeberg,
+  zig_0_15,
+  libxkbcommon,
+  wayland,
+  wayland-protocols,
+  callPackage,
+  pkg-config,
+  wayland-scanner,
 }:
 
 stdenv.mkDerivation (finalAttrs: {
@@ -44,7 +44,8 @@ stdenv.mkDerivation (finalAttrs: {
   zigBuildFlags = [
     "--system"
     "${finalAttrs.deps}"
-  ] ++ [ "-Doptimize=ReleaseSafe" ];
+  ]
+  ++ [ "-Doptimize=ReleaseSafe" ];
 
   meta = {
     homepage = "https://codeberg.org/Sivecano/rhine";

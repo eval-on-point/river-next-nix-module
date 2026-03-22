@@ -12,7 +12,7 @@
 }: # Packaging approach adopted from https://codeberg.org/tazjin/reka/src/branch/canon/default.nix
 
 let
-reka = rustPlatform.buildRustPackage {
+  reka = rustPlatform.buildRustPackage {
     pname = "reka-lib";
     version = "unstable-2026-03-16";
 

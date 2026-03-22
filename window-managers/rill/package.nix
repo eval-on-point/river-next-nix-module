@@ -1,16 +1,16 @@
 {
-lib,
-stdenv,
-fetchFromCodeberg,
-withManpages ? true,
-scdoc,
-zig_0_15,
-libxkbcommon,
-wayland,
-wayland-protocols,
-callPackage,
-pkg-config,
-wayland-scanner,
+  lib,
+  stdenv,
+  fetchFromCodeberg,
+  withManpages ? true,
+  scdoc,
+  zig_0_15,
+  libxkbcommon,
+  wayland,
+  wayland-protocols,
+  callPackage,
+  pkg-config,
+  wayland-scanner,
 }:
 
 stdenv.mkDerivation (finalAttrs: {
@@ -35,7 +35,8 @@ stdenv.mkDerivation (finalAttrs: {
     libxkbcommon
     wayland
     wayland-protocols
-  ] ++ lib.optional withManpages scdoc;
+  ]
+  ++ lib.optional withManpages scdoc;
 
   postInstall = ''
     install -Dm755 assets/config.zon -t $out/example/
@@ -46,7 +47,8 @@ stdenv.mkDerivation (finalAttrs: {
   zigBuildFlags = [
     "--system"
     "${finalAttrs.deps}"
-  ] ++ [ "-Doptimize=ReleaseSafe" ];
+  ]
+  ++ [ "-Doptimize=ReleaseSafe" ];
 
   meta = {
     homepage = "https://codeberg.org/lzj15/rill";

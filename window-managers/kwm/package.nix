@@ -1,19 +1,19 @@
 {
-lib,
-stdenv,
-fetchFromGitHub,
-withBar ? true,
-withCustomConfig ? false,
-scdoc,
-zig_0_15,
-libxkbcommon,
-wayland,
-wayland-protocols,
-callPackage,
-pkg-config,
-wayland-scanner,
-pixman,
-fcft,
+  lib,
+  stdenv,
+  fetchFromGitHub,
+  withBar ? true,
+  withCustomConfig ? false,
+  scdoc,
+  zig_0_15,
+  libxkbcommon,
+  wayland,
+  wayland-protocols,
+  callPackage,
+  pkg-config,
+  wayland-scanner,
+  pixman,
+  fcft,
 }:
 
 stdenv.mkDerivation (finalAttrs: {
@@ -47,9 +47,10 @@ stdenv.mkDerivation (finalAttrs: {
   zigBuildFlags = [
     "--system"
     "${finalAttrs.deps}"
-  ] ++ [ "-Doptimize=ReleaseSafe" ]
+  ]
+  ++ [ "-Doptimize=ReleaseSafe" ]
   ++ lib.optional withBar "-Dbar"
-  ++ lib.optional withCustomConfig "-Dconfig"; #
+  ++ lib.optional withCustomConfig "-Dconfig";
 
   meta = {
     homepage = "https://github.com/kewuaa/kwm";

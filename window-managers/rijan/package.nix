@@ -15,7 +15,8 @@
   libffi,
 }:
 
-stdenv.mkDerivation (finalAttrs: { # Messy build altogether, be warned.
+stdenv.mkDerivation (finalAttrs: {
+  # Messy build altogether, be warned.
   pname = "rijan";
   version = "unstable-2026-01-08";
 
@@ -52,7 +53,8 @@ stdenv.mkDerivation (finalAttrs: { # Messy build altogether, be warned.
   zigBuildFlags = [
     "--system"
     "${finalAttrs.deps}"
-  ] ++ [ "-Doptimize=ReleaseSafe" ];
+  ]
+  ++ [ "-Doptimize=ReleaseSafe" ];
 
   meta = {
     homepage = "https://codeberg.org/ifreund/rijan";

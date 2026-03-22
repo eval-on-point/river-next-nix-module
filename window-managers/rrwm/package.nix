@@ -35,8 +35,9 @@ rustPlatform.buildRustPackage {
   buildInputs = [
     wayland
     libxkbcommon
-  ] ++ lib.optional withWev wev
-    ++ lib.optional withWlrRandr wlr-randr;
+  ]
+  ++ lib.optional withWev wev
+  ++ lib.optional withWlrRandr wlr-randr;
 
   postInstall = ''
     install -Dm755 $src/example/waybar_example_config.jsonc $out/example
